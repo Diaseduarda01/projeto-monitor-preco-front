@@ -11,21 +11,26 @@ var HOST_APP = process.env.APP_HOST;
 
 var app = express();
 
-var indexRouter = require("./src/index/router.js");
-var usuarioRouter = require("./src/usuario/router.js");
+var indexRouter = require("./src/index/IndexRouter.js");
+var usuarioRouter = require("./src/usuario/AuthRouter.js");
+var produtoRouter = require("./src/produto/ProdutoRouter.js")
+// var dashboardRouter = require("./src/dashboard/dashboard.js")
+var cookieParser = require("cookie-parser");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors());
+app.use(cookieParser());
 
 app.use("/", indexRouter);
 app.use("/auth", usuarioRouter);
-
+app.use("/produtos", produtoRouter);
+// app.use("/historico", dashboardRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`
-      Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar .: http://${HOST_APP}:${PORTA_APP}/cadastrar.html :. \n\n
+      Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar .: http://${HOST_APP}:${PORTA_APP}/auth/cadastrar.html :. \n\n
         Você está rodando sua aplicação em ambiente de .:${process.env.AMBIENTE_PROCESSO}:.`);
 });

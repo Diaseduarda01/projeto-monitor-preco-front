@@ -21,10 +21,10 @@ router.post("/login", async (req, res) => {
         const response = await sendRequest({
             url: "/auth/login",
             data: req.body
-        });
+        }); 
 
-        const { token, nome, role } = response.data;
-        console.log("[login] Autenticado com sucesso. Usuário:", nome);
+        const { token, nome, id, role } = response.data;
+        console.log("[login] Autenticado com sucesso. Usuário:", nome, id);
 
         
         res.cookie("token", token, {
@@ -34,7 +34,7 @@ router.post("/login", async (req, res) => {
             sameSite: "Strict"
         });
 
-        res.status(200).json({ nome, role });
+        res.status(200).json({ nome, role, id });
 
     } catch (err) {
         console.error("[login] Erro ao autenticar:", err.response?.data || err.message);
@@ -52,8 +52,8 @@ router.post("/register", async (req, res) => {
             headers: { Authorization: ADMIN_AUTH }
         });
 
-        const { token, nome, role } = response.data;
-        console.log("[register] Usuário registrado com sucesso. Usuário:", nome);
+        const { token, nome, id, role } = response.data;
+        console.log("[register] Usuário registrado com sucesso. Usuário:", nome, id);
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -62,7 +62,7 @@ router.post("/register", async (req, res) => {
             sameSite: "Strict"
         });
 
-        res.status(200).json({ nome, role });
+        res.status(200).json({ nome, role, id });
 
     } catch (err) {
         console.error("[register] Erro ao registrar:", err.response?.data || err.message);
