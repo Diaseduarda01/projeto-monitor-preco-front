@@ -14,7 +14,7 @@ var app = express();
 var indexRouter = require("./src/index/IndexRouter.js");
 var usuarioRouter = require("./src/usuario/AuthRouter.js");
 var produtoRouter = require("./src/produto/ProdutoRouter.js")
-// var dashboardRouter = require("./src/dashboard/dashboard.js")
+var dashboardRouter = require("./src/dashboard/dashboard.js")
 var cookieParser = require("cookie-parser");
 
 app.use(express.json());
@@ -27,7 +27,7 @@ app.use(cookieParser());
 app.use("/", indexRouter);
 app.use("/auth", usuarioRouter);
 app.use("/produtos", produtoRouter);
-// app.use("/historico", dashboardRouter);
+app.use("/historico", dashboardRouter);
 
 app.listen(PORTA_APP, function () {
     console.log(`

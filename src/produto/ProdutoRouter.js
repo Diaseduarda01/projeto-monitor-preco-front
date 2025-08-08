@@ -19,7 +19,6 @@ const sendRequest = async ({ url, data, headers = {}, method = "post" }) => {
     return response;
 };
 
-// Criar usuário (POST /produtos)
 router.post("/", async (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ erro: "Não autorizado" });
@@ -38,7 +37,6 @@ router.post("/", async (req, res) => {
     }
 });
 
-// Listar todos os usuários (GET /produtos)
 router.get("/", async (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ erro: "Não autorizado" });
@@ -55,7 +53,6 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Buscar usuário por ID (GET /produtos/:id)
 router.get("/:id", async (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ erro: "Não autorizado" });
@@ -72,7 +69,6 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// Atualizar usuário (PUT /produtos/:id)
 router.put("/:id", async (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ erro: "Não autorizado" });
@@ -92,7 +88,6 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-// Deletar usuário (DELETE /produtos/:id)
 router.delete("/:id", async (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ erro: "Não autorizado" });

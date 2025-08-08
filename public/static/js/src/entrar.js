@@ -38,7 +38,7 @@ function entrar() {
         console.log("Login bem-sucedido:", json);
 
         setTimeout(() => {
-            window.location.href = "./index-cadastrados.html";
+            window.location.href = "../dashboard.html";
         }, 1000);
     })
     .catch((erro) => {
