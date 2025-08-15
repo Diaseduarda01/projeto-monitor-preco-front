@@ -36,6 +36,10 @@ function waitForElement(selector, timeout = 3000) {
   });
 }
 
+function irParaEditarProduto(id) {
+  window.location.href = `editar-produto.html?id=${id}`;
+}
+
 /**
  * Lista produtos do histórico do usuário e insere na tabela.
  */
@@ -108,16 +112,16 @@ async function listar() {
     const ultimoPreco = Number(produto.ultimoPreco) || 0;
 
     tr.onclick = () => {
-        window.location.href = `../charts.html?id=${produto.id ?? ''}`;
+        window.location.href = `../dashboard-produto.html?id=${produto.id ?? ''}`;
     };
-    
+  
     tr.innerHTML = `
       <td>${produto.nome ?? ''}</td>
       <td>R$ ${precoDesejado.toFixed(2)}</td>
       <td>R$ ${ultimoPreco.toFixed(2)}</td>
       <td>${produto.status ?? ''}</td>
       <td style="display: flex; gap: 8px;">
-        <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); editarProduto('${produto.id ?? ''}')">
+        <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); irParaEditarProduto('${produto.id ?? ''}')">
           Editar
         </button>
         <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); removerProduto('${produto.id ?? ''}')">
@@ -131,4 +135,80 @@ async function listar() {
 
   tabela.appendChild(fragment);
   console.log('[listar] Tabela atualizada com sucesso.');
+}
+
+function editarProduto(id, event) {
+  event?.preventDefault();
+
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("❌ Usuário não autenticado!");
+    return;
+  }
+
+  fetch(`${API_URL}/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Erro ao buscar produto");
+    return res.json();
+  })
+  .then(produto => {
+    const nome = prompt("Nome do produto:", produto.nome);
+    const precoDesejado = prompt("Preço desejado:", produto.precoDesejado);
+    const status = prompt("Status:", produto.status);
+
+    if (!nome || !precoDesejado || !status) {
+      alert("❌ Alteração cancelada");
+      return;
+    }
+
+    return fetch(`${API_URL}/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        nome,
+        precoDesejado: parseFloat(precoDesejado),
+        status
+      })
+    });
+  })
+  .then(updateRes => {
+    if (!updateRes) return;
+    if (!updateRes.ok) throw new Error("Erro ao atualizar produto");
+    alert("✅ Produto atualizado com sucesso!");
+    location.reload();
+  })
+  .catch(err => {
+    console.error(err);
+    alert(`❌ ${err.message}`);
+  });
+}
+
+function removerProduto(id) {
+  if (!confirm("Tem certeza que deseja remover este produto?")) return;
+
+  fetch(`${API_URL}/${id}`, {
+      method: "DELETE",
+      headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}` // Token para autenticação
+      }
+  })
+      .then(res => {
+          if (!res.ok) throw new Error("Erro ao remover produto");
+          alert("✅ Produto removido com sucesso!");
+          location.reload();
+      })
+      .catch(err => {
+          console.error(err);
+          alert(`❌ ${err.message}`);
+      });
 }
