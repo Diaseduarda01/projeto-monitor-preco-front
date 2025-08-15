@@ -1,12 +1,13 @@
-// routes/historicoPreco.js
 const express = require("express");
 const axios = require("axios");
 const router = express.Router();
 
 const JAVA_API_URL = process.env.JAVA_API_URL;
 
-// Função genérica para enviar requisições
 const sendRequest = async ({ url, method = "get", data = {}, headers = {} }) => {
+    console.log("[sendRequest] URL final:", `${JAVA_API_URL}${url}`);
+    console.log("[sendRequest] Headers:", headers);
+
     const response = await axios({
         method,
         url: `${JAVA_API_URL}${url}`,
@@ -20,21 +21,24 @@ const sendRequest = async ({ url, method = "get", data = {}, headers = {} }) => 
     return response;
 };
 
-// Middleware para verificar token
 const authMiddleware = (req, res, next) => {
     const token = req.cookies.token;
-    if (!token) return res.status(401).json({ erro: "Não autorizado" });
+    console.log("[authMiddleware] Token recebido:", token);
+
+    if (!token) {
+        return res.status(401).json({ erro: "Não autorizado" });
+    }
     req.authHeader = { Authorization: `Bearer ${token}` };
     next();
 };
 
 router.use(authMiddleware);
 
-// 1. Listar histórico de preços
+// 1. Histórico
 router.get("/listar-historico/:produtoId/:usuarioId", async (req, res) => {
     try {
         const response = await sendRequest({
-            url: `/listar-historico/${req.params.produtoId}/${req.params.usuarioId}`,
+            url: `/historico/listar-historico/${req.params.produtoId}/${req.params.usuarioId}`,
             headers: req.authHeader
         });
         res.status(response.status).json(response.data);
@@ -44,11 +48,11 @@ router.get("/listar-historico/:produtoId/:usuarioId", async (req, res) => {
     }
 });
 
-// 2. Listar produtos para dashboard
+// 2. Produtos
 router.get("/listar-produtos/:usuarioId", async (req, res) => {
     try {
         const response = await sendRequest({
-            url: `/listar-produtos/${req.params.usuarioId}`,
+            url: `/historico/listar-produtos/${req.params.usuarioId}`, 
             headers: req.authHeader
         });
         res.status(response.status).json(response.data);
@@ -62,7 +66,7 @@ router.get("/listar-produtos/:usuarioId", async (req, res) => {
 router.get("/total-monitorados/:usuarioId", async (req, res) => {
     try {
         const response = await sendRequest({
-            url: `/total-monitorados/${req.params.usuarioId}`,
+            url: `/historico/total-monitorados/${req.params.usuarioId}`,
             headers: req.authHeader
         });
         res.status(response.status).json(response.data);
@@ -76,7 +80,7 @@ router.get("/total-monitorados/:usuarioId", async (req, res) => {
 router.get("/total-proximos-preco-desejado/:usuarioId", async (req, res) => {
     try {
         const response = await sendRequest({
-            url: `/total-proximos-preco-desejado/${req.params.usuarioId}`,
+            url: `/historico/total-proximos-preco-desejado/${req.params.usuarioId}`,
             headers: req.authHeader
         });
         res.status(response.status).json(response.data);
@@ -90,7 +94,7 @@ router.get("/total-proximos-preco-desejado/:usuarioId", async (req, res) => {
 router.get("/total-no-preco-desejado/:usuarioId", async (req, res) => {
     try {
         const response = await sendRequest({
-            url: `/total-no-preco-desejado/${req.params.usuarioId}`,
+            url: `/historico/total-no-preco-desejado/${req.params.usuarioId}`,
             headers: req.authHeader
         });
         res.status(response.status).json(response.data);
@@ -104,7 +108,7 @@ router.get("/total-no-preco-desejado/:usuarioId", async (req, res) => {
 router.get("/total-dias-monitoramento/:produtoId/:usuarioId", async (req, res) => {
     try {
         const response = await sendRequest({
-            url: `/total-dias-monitoramento/${req.params.produtoId}/${req.params.usuarioId}`,
+            url: `/historico/total-dias-monitoramento/${req.params.produtoId}/${req.params.usuarioId}`,
             headers: req.authHeader
         });
         res.status(response.status).json(response.data);
@@ -118,7 +122,7 @@ router.get("/total-dias-monitoramento/:produtoId/:usuarioId", async (req, res) =
 router.get("/preco-desejado/:produtoId/:usuarioId", async (req, res) => {
     try {
         const response = await sendRequest({
-            url: `/preco-desejado/${req.params.produtoId}/${req.params.usuarioId}`,
+            url: `/historico/preco-desejado/${req.params.produtoId}/${req.params.usuarioId}`,
             headers: req.authHeader
         });
         res.status(response.status).json(response.data);
@@ -132,7 +136,7 @@ router.get("/preco-desejado/:produtoId/:usuarioId", async (req, res) => {
 router.get("/preco-atual/:produtoId/:usuarioId", async (req, res) => {
     try {
         const response = await sendRequest({
-            url: `/preco-atual/${req.params.produtoId}/${req.params.usuarioId}`,
+            url: `/historico/preco-atual/${req.params.produtoId}/${req.params.usuarioId}`,
             headers: req.authHeader
         });
         res.status(response.status).json(response.data);
@@ -146,7 +150,7 @@ router.get("/preco-atual/:produtoId/:usuarioId", async (req, res) => {
 router.get("/variacao-porcentual/:produtoId/:usuarioId", async (req, res) => {
     try {
         const response = await sendRequest({
-            url: `/variacao-porcentual/${req.params.produtoId}/${req.params.usuarioId}`,
+            url: `/historico/variacao-porcentual/${req.params.produtoId}/${req.params.usuarioId}`,
             headers: req.authHeader
         });
         res.status(response.status).json(response.data);

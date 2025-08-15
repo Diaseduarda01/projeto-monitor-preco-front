@@ -1,4 +1,21 @@
-.btn-purple:hover {
-    border-color: #cbc4d8;
-    color: #000000;
+.card {
+    background-color: #f0e0ff;
+    border: 1px solid #d1b3ff;
+}
+
+.btn-purple {
+    background-color: #8e44ad;
+    border-color: #8e44ad;
+}
+
+a {
+    color: #6a0dad;
+}
+
+a:hover {
+    color: #4b0082;
+}
+
+.divider {
+    border-top: 1px solid #d1b3ff;
 }

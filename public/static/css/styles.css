@@ -11241,3 +11241,26 @@ body {
   font-size: 0.75rem;
   border-radius: 0.375rem !important;
 }
+
+ .sb-topnav.navbar {
+  background-color: #9966cc !important;
+}
+
+.sb-sidenav {
+  background-color: #9966cc !important;
+}
+
+.sb-sidenav .nav-link,
+.sb-sidenav .sb-sidenav-menu-heading {
+  color: #ffffff !important;
+}
+
+.sb-sidenav .nav-link:hover {
+  background-color: #9966cc !important;
+  color: #fff !important;
+}
+
+.sb-sidenav-footer {
+  background-color: #9966cc !important;
+  color: #fff !important;
+}

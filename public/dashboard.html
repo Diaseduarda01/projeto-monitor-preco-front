@@ -19,27 +19,43 @@
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <div class="sb-sidenav-menu">
-                        <div class="nav">
-                            <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link" href="dashboard.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Dashboard
-                            </a>
-                            <div class="sb-sidenav-menu-heading">Addons</div>
-                            <a class="nav-link" href="charts.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Charts
-                            </a>
-                            <a class="nav-link" href="tables.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Tables
-                            </a>
-                        </div>
-                    </div>
-                    <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
-                        Start Bootstrap
+                    <div id="layoutSidenav_nav">
+                        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                            <div class="sb-sidenav-menu">
+                                <div class="nav">
+                                    <div class="sb-sidenav-menu-heading">Core</div>
+                    
+                                    <!-- Home -->
+                                    <a class="nav-link active" href="index.html">
+                                        <div class="sb-nav-link-icon">
+                                            <i class="fas fa-home" style="color: white;"></i>
+                                        </div>
+                                        Home
+                                    </a>
+                    
+                                    <!-- Dashboard -->
+                                    <a class="nav-link" href="dashboard.html">
+                                        <div class="sb-nav-link-icon">
+                                            <i class="fas fa-tachometer-alt" style="color: white;"></i>
+                                        </div>
+                                        Dashboard
+                                    </a>
+                    
+                                    <div class="sb-sidenav-menu-heading">Produtos</div>
+                    
+                                    <!-- Cadastrar Produto -->
+                                    <a class="nav-link" href="cadastrar-produto.html">
+                                        <div class="sb-nav-link-icon">
+                                            <i class="fas fa-box-open" style="color: white;"></i>
+                                        </div>
+                                        Cadastrar Produto
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="sb-sidenav-footer">
+                                <div class="small">Logged in as:</div>
+                                Start Bootstrap
+                            </div>
                     </div>
                 </nav>
             </div>
@@ -52,32 +68,46 @@
                         </ol>
                         <div class="row" style="display: flex; justify-content: center; justify-content: space-between;">
                             <div class="col-xl-3 col-md-6">
-                                <div class="card bg-primary text-white mb-4">
-                                    <div class="card-body">Total de Produtos Monitorados</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                <div class="card shadow-sm mb-4" style="border: 1px solid #ddd;">
+                                    <div class="card-body text-center">
+                                        <strong>Total de Produtos Monitorados:</strong>
+                                        <span id="kpi-total-monitorados">--</span>
                                     </div>
                                 </div>
                             </div>
+                        
                             <div class="col-xl-3 col-md-6">
-                                <div class="card bg-warning text-white mb-4">
-                                    <div class="card-body">Quantidade de Produtos Próximo ao Preço desejado</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                <div class="card shadow-sm mb-4" style="border: 1px solid #ddd;">
+                                    <div class="card-body text-center">
+                                        <strong>Produtos Próximo ao Preço Desejado:</strong>
+                                        <span id="kpi-proximos-preco">--</span>
                                     </div>
                                 </div>
                             </div>
+                        
                             <div class="col-xl-3 col-md-6">
-                                <div class="card bg-success text-white mb-4">
-                                    <div class="card-body">Quantidade de Produto no Preço Desejado</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                <div class="card shadow-sm mb-4" style="border: 1px solid #ddd;">
+                                    <div class="card-body text-center">
+                                        <strong>Produtos no Preço Desejado:</strong>
+                                        <span id="kpi-no-preco">--</span>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                            <a href="cadastrar-produto.html">
+                                <button id="btnAdd" style="
+                                background-color: #5a38f1;
+                                color: white;
+                                padding: 8px 14px;
+                                border: none;
+                                border-radius: 4px;
+                                cursor: pointer;
+                            ">
+                                + Adicionar Produto
+                            </button>
+                            </a>
                         </div>
                         <div class="card mb-4">
                             <div class="card-header">
@@ -92,7 +122,7 @@
                                             <th>Preço Desejado</th>
                                             <th>Preço Atual</th>
                                             <th>Status do Produto</th>
-                                            <th></th>
+                                            <th>Ação</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tabela-produtos"> 
@@ -123,6 +153,7 @@
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="static/js/datatables-simple-demo.js"></script>
         <script src="static/js/src/listar-produtos.js"></script>
+        <script src="static/js/src/kpi.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 listar();
