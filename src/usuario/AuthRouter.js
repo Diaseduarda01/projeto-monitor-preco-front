@@ -12,7 +12,6 @@ const sendRequest = async ({ url, data, headers = {} }) => {
             ...headers
         }
     });
-    console.log(`[sendRequest] Resposta status: ${response.status}`);
     return response;
 };
 
@@ -24,8 +23,6 @@ router.post("/login", async (req, res) => {
         }); 
 
         const { token, nome, id, role } = response.data;
-        console.log("[login] Autenticado com sucesso. Usuário:", nome, id);
-
         
         res.cookie("token", token, {
             httpOnly: true,
@@ -53,7 +50,6 @@ router.post("/register", async (req, res) => {
         });
 
         const { token, nome, id, role } = response.data;
-        console.log("[register] Usuário registrado com sucesso. Usuário:", nome, id);
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -65,7 +61,6 @@ router.post("/register", async (req, res) => {
         res.status(200).json({ nome, role, id });
 
     } catch (err) {
-        console.error("[register] Erro ao registrar:", err.response?.data || err.message);
         res.status(err.response?.status || 500).json({
             erro: err.response?.data || "Erro ao registrar na API Java"
         });

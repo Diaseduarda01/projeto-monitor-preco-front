@@ -6,12 +6,10 @@
 async function fetchKPI(endpoint, elementoId) {
     const usuarioId = sessionStorage.getItem("ID_USUARIO");
     if (!usuarioId) {
-        console.error(`[fetchKPI] ID_USUARIO não encontrado. Abortando request para "${endpoint}".`);
         return null;
     }
 
     const url = `/historico/${endpoint}/${usuarioId}`;
-    console.log(`[fetchKPI] Iniciando request: ${url}`);
 
     try {
         const resposta = await fetch(url, {
@@ -21,7 +19,6 @@ async function fetchKPI(endpoint, elementoId) {
         });
 
         if (resposta.status === 204) {
-            console.warn(`[fetchKPI] Nenhum dado encontrado para ${endpoint}.`);
             document.getElementById(elementoId).textContent = 0;
             return 0;
         }
@@ -34,11 +31,9 @@ async function fetchKPI(endpoint, elementoId) {
 
         const valor = await resposta.json();
         document.getElementById(elementoId).textContent = valor;
-        console.log(`[fetchKPI] KPI "${endpoint}" atualizada com valor: ${valor}`);
         return valor;
 
     } catch (erro) {
-        console.error(`[fetchKPI] Erro de rede para ${endpoint}:`, erro);
         return null;
     }
 }

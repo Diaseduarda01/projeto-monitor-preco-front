@@ -32,8 +32,14 @@ function cadastrar(event) {
             resposta.json().then(data => {
                 console.log("Cadastro efetuado com sucesso. Dados retornados:", data);
             });
-            exibirMensagemSucesso("Cadastro realizado com sucesso! Redirecionando...");
-            limparFormularioCadastro();
+            
+            // exibirMensagemSucesso("Cadastro realizado com sucesso! Redirecionando...");
+            // limparFormularioCadastro();
+        
+            setTimeout(() => {
+                window.location.href = "/dashboard.html"; 
+            }, 2000);
+        
         } else {
             resposta.text().then((texto) => {
                 console.error("Erro no cadastro:", texto);
@@ -42,8 +48,6 @@ function cadastrar(event) {
         }
     })
     .catch((erro) => {
-        document.getElementById("loading").style.display = "none";
         console.error(`#ERRO: ${erro}`);
-        exibirMensagemErro("Erro ao realizar o cadastro. Tente novamente.");
     });
 }

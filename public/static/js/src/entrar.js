@@ -18,7 +18,6 @@ function entrar() {
         }),
     })
     .then((resposta) => {
-        console.log("Status da resposta HTTP:", resposta.status);
         if (resposta.ok) {
             return resposta.json();
         } else {
@@ -29,7 +28,6 @@ function entrar() {
         }
     })
     .then((json) => {
-        // Ajuste aqui para os campos que realmente existem na resposta
         sessionStorage.setItem("NOME_USUARIO", json.nome);
         sessionStorage.setItem("ROLE_USUARIO", JSON.stringify(json.role));
         sessionStorage.setItem("ID_USUARIO", json.id)

@@ -1,73 +1,46 @@
-function editarProduto(id) {
-    // Impede comportamento padrão se for chamado a partir de um form
-    event?.preventDefault();
+const params = new URLSearchParams(window.location.search);
+const produtoId = params.get("id");
 
-    fetch(`${API_URL}/produtos/${id}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")}` // Pegando token do localStorage
-        }
-    })
-        .then(res => {
-            if (!res.ok) throw new Error("Erro ao buscar produto");
-            return res.json();
-        })
-        .then(produto => {
-            const nome = prompt("Nome do produto:", produto.nome);
-            const precoDesejado = prompt("Preço desejado:", produto.precoDesejado);
-            const status = prompt("Status:", produto.status);
-
-            if (!nome || !precoDesejado || !status) {
-                alert("❌ Alteração cancelada");
-                return;
-            }
-
-            return fetch(`${API_URL}/produtos/${id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("token")}` // Token para atualização
-                },
-                body: JSON.stringify({
-                    nome,
-                    precoDesejado: parseFloat(precoDesejado),
-                    status
-                })
-            });
-        })
-        .then(updateRes => {
-            if (!updateRes) return; // Se cancelou, não faz nada
-            if (!updateRes.ok) throw new Error("Erro ao atualizar produto");
-            alert("✅ Produto atualizado com sucesso!");
-            location.reload();
-        })
-        .catch(err => {
-            console.error(err);
-            alert(`❌ ${err.message}`);
-        });
+function preencherFormulario(produto) {
+  document.querySelector("#produtoAtivo").checked = produto.status === "Ativo";
+  document.querySelector('input[placeholder="Ex: Notebook Dell XPS 13"]').value = produto.nome;
+  document.querySelector('input[placeholder="https://www.exemplo.com/produto"]').value = produto.url;
+  document.querySelector('input[placeholder="Ex: price-tag, product-title"]').value = produto.classe;
+  document.querySelector('input[placeholder="Ex: 3500"]').value = produto.precoDesejado;
 }
 
+fetch(`/produtos/${produtoId}`, {
+  method: "GET",
+  headers: { "Content-Type": "application/json" },
+  credentials: "include"
+})
+  .then(res => res.ok ? res.json() : Promise.reject("Erro ao buscar produto"))
+  .then(produto => preencherFormulario(produto))
+  .catch(err => console.error(err));
 
-const API_URL = "/produtos";
+document.querySelector(".btn-success").addEventListener("click", (e) => {
+  e.preventDefault();
 
-function removerProduto(id) {
-    if (!confirm("Tem certeza que deseja remover este produto?")) return;
+  const produtoAtualizado = {
+    nome: document.querySelector('input[placeholder="Ex: Notebook Dell XPS 13"]').value,
+    url: document.querySelector('input[placeholder="https://www.exemplo.com/produto"]').value,
+    classe: document.querySelector('input[placeholder="Ex: price-tag, product-title"]').value,
+    precoDesejado: parseFloat(document.querySelector('input[placeholder="Ex: 3500"]').value),
+    status: document.querySelector("#produtoAtivo").checked ? "Ativo" : "Inativo"
+  };
 
-    fetch(`${API_URL}/${id}`, {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")}` // Token para autenticação
-        }
-    })
-        .then(res => {
-            if (!res.ok) throw new Error("Erro ao remover produto");
-            alert("✅ Produto removido com sucesso!");
-            location.reload();
-        })
-        .catch(err => {
-            console.error(err);
-            alert(`❌ ${err.message}`);
-        });
-}
+  fetch(`/produtos/${produtoId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(produtoAtualizado)
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Erro ao atualizar produto");
+    alert("✅ Produto atualizado com sucesso!");
+    setTimeout(() => {
+      window.location.href = "/dashboard.html"; 
+    }, 2000);
+  })
+  .catch(err => alert(`❌ ${err}`));
+});

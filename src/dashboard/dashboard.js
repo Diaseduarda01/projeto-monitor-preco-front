@@ -5,9 +5,6 @@ const router = express.Router();
 const JAVA_API_URL = process.env.JAVA_API_URL;
 
 const sendRequest = async ({ url, method = "get", data = {}, headers = {} }) => {
-    console.log("[sendRequest] URL final:", `${JAVA_API_URL}${url}`);
-    console.log("[sendRequest] Headers:", headers);
-
     const response = await axios({
         method,
         url: `${JAVA_API_URL}${url}`,
@@ -17,13 +14,11 @@ const sendRequest = async ({ url, method = "get", data = {}, headers = {} }) => 
             ...headers
         }
     });
-    console.log(`[sendRequest] ${method.toUpperCase()} ${url} → ${response.status}`);
     return response;
 };
 
 const authMiddleware = (req, res, next) => {
     const token = req.cookies.token;
-    console.log("[authMiddleware] Token recebido:", token);
 
     if (!token) {
         return res.status(401).json({ erro: "Não autorizado" });
